@@ -8,6 +8,7 @@ const Anatomy3D=lazy(()=>import('../components/Anatomy3D'));
 type Props={data:AppData;onUpdate:(f:(d:AppData)=>AppData)=>void;onExercise:(id:string)=>void};
 export default function Anatomy({data,onUpdate,onExercise}:Props){
  const [side,setSide]=useState<'front'|'back'>('front');const [area,setArea]=useState<'Upper body'|'Lower body'>('Upper body');const [selected,setSelected]=useState<MuscleId|null>(null);const [location,setLocation]=useState<'gym'|'home'>(data.profile.mode);const [ready,setReady]=useState(false);const [want3D,setWant3D]=useState(true);const [error,setError]=useState(false);
+ useEffect(()=>{if(!selected)return;const timer=window.setTimeout(()=>document.getElementById('muscle-details')?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'}),80);return()=>window.clearTimeout(timer);},[selected]);
  useEffect(()=>{let alive=true;fetch(`${import.meta.env.BASE_URL}anatomy.glb`,{method:'HEAD'}).then(x=>{if(alive)setReady(x.ok);}).catch(()=>{if(alive)setReady(false);});return()=>{alive=false;};},[]);
  const model=data.profile.model;const muscle=selected?getMuscle(selected):null;const entries=muscle?exercisesForMuscle(muscle.id,location):[];
  const actual3D=ready&&model==='male'&&want3D&&!error;
