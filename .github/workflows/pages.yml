@@ -26,6 +26,8 @@ jobs:
           node-version: '22'
       - run: npm install
       - run: npm test
+      - name: Download attributed anatomical 3D asset
+        run: npm run anatomy:download
       - run: GITHUB_PAGES=true npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
